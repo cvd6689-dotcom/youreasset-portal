@@ -21,7 +21,17 @@ import {
   LogOut,
   Upload,
   Download,
+  Mail,
 } from "lucide-react";
+import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebase";
+import {
+  initializeSiteData,
+  subscribeBrand,
+  subscribeInsurers,
+  saveBrand,
+  saveInsurers,
+} from "./dataService";
 
 function cn(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -63,9 +73,6 @@ function Input({ className = "", ...props }) {
 function Badge({ className = "", children }) {
   return <span className={cn("inline-flex items-center rounded-full px-3 py-1 text-xs font-medium", className)}>{children}</span>;
 }
-
-const STORAGE_KEY = "youreasset-insurance-portal-data-v1";
-const ADMIN_PASSWORD = "YOURS-ADMIN-2026";
 
 const defaultBrand = {
   company: "유어즈에셋",
@@ -414,7 +421,8 @@ function Directory({ activeTop, setActiveTop, insurers }) {
   );
 }
 
-function AdminModal({ open, onClose, isAdmin, onLogin, onLogout, brand, setBrand, insurers, setInsurers, onSave }) {
+function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurers, onSave }) {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [adminTab, setAdminTab] = useState("brand");
   const [insurerSearch, setInsurerSearch] = useState("");
@@ -463,12 +471,27 @@ function AdminModal({ open, onClose, isAdmin, onLogin, onLogout, brand, setBrand
         const parsed = JSON.parse(String(reader.result));
         if (parsed.brand) setBrand(parsed.brand);
         if (Array.isArray(parsed.insurers)) setInsurers(parsed.insurers);
-        alert("데이터 파일을 불러왔습니다.");
+        alert("데이터 파일을 불러왔습니다. 저장 버튼을 눌러야 실사이트에 반영됩니다.");
       } catch (e) {
         alert(`파일 오류: ${e.message}`);
       }
     };
     reader.readAsText(file, "utf-8");
+  };
+
+  const handleLogin = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      setPassword("");
+      alert("관리자 로그인 완료");
+    } catch (error) {
+      alert("로그인 실패: 이메일 또는 비밀번호를 확인해주세요.");
+    }
+  };
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    alert("로그아웃되었습니다.");
   };
 
   return (
@@ -480,19 +503,22 @@ function AdminModal({ open, onClose, isAdmin, onLogin, onLogout, brand, setBrand
             <h3 className="text-2xl font-black text-slate-950">홈페이지 내용 수정</h3>
           </div>
           <div className="flex items-center gap-2">
-            {isAdmin && <Button variant="outline" onClick={onLogout}><LogOut className="mr-2 h-4 w-4" />로그아웃</Button>}
+            {user && <Button variant="outline" onClick={handleLogout}><LogOut className="mr-2 h-4 w-4" />로그아웃</Button>}
             <Button variant="outline" onClick={onClose}>닫기</Button>
           </div>
         </div>
 
-        {!isAdmin ? (
+        {!user ? (
           <div className="p-6">
             <Card className="mx-auto max-w-md rounded-[24px] border-slate-200 shadow-sm">
               <CardContent className="p-6">
                 <p className="mb-3 text-sm text-slate-500">관리자만 수정할 수 있습니다.</p>
-                <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="관리자 비밀번호 입력" className="h-12 rounded-xl" />
-                <Button className="mt-4 h-12 w-full rounded-xl" onClick={() => onLogin(password)}>로그인</Button>
-                <p className="mt-3 text-xs leading-6 text-slate-500">지금은 관리자 화면에서 회사 정보와 보험사별 링크·연락처를 직접 수정할 수 있게 구성되어 있습니다. 실제 배포 시에는 비밀번호 대신 관리자 계정 로그인으로 바꾸는 것이 더 안전합니다.</p>
+                <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="관리자 이메일" className="h-12 rounded-xl" />
+                <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="비밀번호" className="mt-3 h-12 rounded-xl" />
+                <Button className="mt-4 h-12 w-full rounded-xl" onClick={handleLogin}>
+                  <Mail className="mr-2 h-4 w-4" />관리자 로그인
+                </Button>
+                <p className="mt-3 text-xs leading-6 text-slate-500">설계사들은 로그인 없이 열람만 가능하고, 관리자는 Firebase에 등록한 이메일/비밀번호로 로그인해 수정할 수 있습니다.</p>
               </CardContent>
             </Card>
           </div>
@@ -525,10 +551,10 @@ function AdminModal({ open, onClose, isAdmin, onLogin, onLogout, brand, setBrand
                     <div className="mt-4 space-y-3 text-sm leading-7 text-slate-600">
                       <p>회사명, 대표번호, 메인 문구는 여기서 바로 바꿀 수 있습니다.</p>
                       <p>보험사별 고객센터 번호, 팩스번호, 모니터링 연락처, 영업포탈 링크, 상품공시실 링크는 <span className="font-bold text-slate-900">보험사별 정보 수정</span> 탭에서 바꾸면 됩니다.</p>
-                      <p>수정 후에는 반드시 <span className="font-bold text-slate-900">브라우저에 저장</span> 버튼을 눌러야 현재 기기에서 유지됩니다.</p>
+                      <p>저장 버튼을 누르면 Firebase에 저장되고, 사이트에 즉시 반영됩니다.</p>
                     </div>
                     <div className="mt-6">
-                      <Button onClick={onSave}><Save className="mr-2 h-4 w-4" />브라우저에 저장</Button>
+                      <Button onClick={onSave}><Save className="mr-2 h-4 w-4" />실시간 저장</Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -618,7 +644,7 @@ function AdminModal({ open, onClose, isAdmin, onLogin, onLogout, brand, setBrand
                         </div>
 
                         <div className="mt-6 flex gap-3">
-                          <Button onClick={onSave}><Save className="mr-2 h-4 w-4" />브라우저에 저장</Button>
+                          <Button onClick={onSave}><Save className="mr-2 h-4 w-4" />실시간 저장</Button>
                         </div>
                       </>
                     ) : (
@@ -635,7 +661,7 @@ function AdminModal({ open, onClose, isAdmin, onLogin, onLogout, brand, setBrand
                   <h4 className="text-xl font-black text-slate-950">백업 / 복원</h4>
                   <p className="mt-2 text-sm leading-6 text-slate-500">JSON 파일로 현재 데이터를 백업하거나, 이전에 저장한 파일을 다시 불러올 수 있습니다.</p>
                   <div className="mt-6 flex flex-wrap gap-3">
-                    <Button onClick={onSave}><Save className="mr-2 h-4 w-4" />브라우저에 저장</Button>
+                    <Button onClick={onSave}><Save className="mr-2 h-4 w-4" />실시간 저장</Button>
                     <Button variant="outline" onClick={exportJson}><Download className="mr-2 h-4 w-4" />JSON 내보내기</Button>
                     <label className="inline-flex cursor-pointer items-center rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
                       <Upload className="mr-2 h-4 w-4" />JSON 불러오기
@@ -717,57 +743,76 @@ export default function YoureAssetInsurancePortal() {
   const [brand, setBrand] = useState(defaultBrand);
   const [insurers, setInsurers] = useState(defaultInsurers);
   const [adminOpen, setAdminOpen] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [user, setUser] = useState(null);
+  const [ready, setReady] = useState(false);
 
   useSeo(brand);
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.brand) setBrand(parsed.brand);
-        if (Array.isArray(parsed.insurers)) setInsurers(parsed.insurers);
-      }
-    } catch {}
+    let unsubBrand = () => {};
+    let unsubInsurers = () => {};
+    let unsubAuth = () => {};
+
+    async function setup() {
+      await initializeSiteData(defaultBrand, defaultInsurers);
+      unsubBrand = subscribeBrand((data) => setBrand(data));
+      unsubInsurers = subscribeInsurers((items) => setInsurers(items));
+      unsubAuth = onAuthStateChanged(auth, (firebaseUser) => {
+        setUser(firebaseUser);
+      });
+      setReady(true);
+    }
+
+    setup();
+
+    return () => {
+      unsubBrand();
+      unsubInsurers();
+      unsubAuth();
+    };
   }, []);
 
-  const saveData = () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ brand, insurers }));
-    alert("브라우저에 저장했습니다. 같은 브라우저에서는 수정 내용이 유지됩니다.");
-  };
-
-  const loginAdmin = (password) => {
-    if (password === ADMIN_PASSWORD) {
-      setIsAdmin(true);
-      alert("관리자 로그인 완료");
-    } else {
-      alert("비밀번호가 맞지 않습니다.");
+  const handleSave = async () => {
+    try {
+      await saveBrand(brand);
+      await saveInsurers(insurers);
+      alert("Firebase에 저장되었습니다. 사이트에 바로 반영됩니다.");
+    } catch (error) {
+      alert("저장 중 오류가 발생했습니다.");
     }
   };
 
+  if (!ready) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-white text-slate-900">
+        <div className="text-center">
+          <p className="text-lg font-bold">불러오는 중...</p>
+          <p className="mt-2 text-sm text-slate-500">Firebase 데이터를 연결하고 있습니다.</p>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-white text-slate-900">
-      <Header activeTop={activeTop} setActiveTop={setActiveTop} brand={brand} onOpenAdmin={() => setAdminOpen(true)} isAdmin={isAdmin} />
+      <Header activeTop={activeTop} setActiveTop={setActiveTop} brand={brand} onOpenAdmin={() => setAdminOpen(true)} isAdmin={!!user} />
       <Hero brand={brand} />
       <About />
       <Features />
       <Directory activeTop={activeTop} setActiveTop={setActiveTop} insurers={insurers} />
       <Footer brand={brand} />
       <div className="mx-auto max-w-7xl px-4 pb-10 text-xs leading-6 text-slate-400 lg:px-8">
-        검색 노출을 위해서는 실제 배포 후 도메인 연결, 사이트맵 제출, 색인 요청이 추가로 필요합니다. 현재 코드는 그 전 단계의 SEO 메타 구조까지 반영되어 있습니다.
+        검색 노출을 위해서는 실제 배포 후 도메인 연결, 사이트맵 제출, 색인 요청이 추가로 필요합니다. 현재 코드는 Firebase 실시간 저장 구조까지 반영되어 있습니다.
       </div>
       <AdminModal
         open={adminOpen}
         onClose={() => setAdminOpen(false)}
-        isAdmin={isAdmin}
-        onLogin={loginAdmin}
-        onLogout={() => setIsAdmin(false)}
+        user={user}
         brand={brand}
         setBrand={setBrand}
         insurers={insurers}
         setInsurers={setInsurers}
-        onSave={saveData}
+        onSave={handleSave}
       />
     </main>
   );
