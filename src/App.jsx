@@ -235,7 +235,7 @@ function Hero({ brand }) {
               YOURS ASSET INSURANCE PORTAL
             </Badge>
             <h1 className="max-w-4xl text-4xl font-black tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
-              꼭 필요한 보험사 업무 정보를
+              보험사 업무 정보를
               <br />
               더 빠르고 깔끔하게 찾는
               <br />
