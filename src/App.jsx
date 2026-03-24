@@ -46,7 +46,8 @@ function CardContent({ className = "", children }) {
 }
 
 function Button({ className = "", variant = "default", children, asChild = false, ...props }) {
-  const base = "inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium transition focus:outline-none";
+  const base =
+    "inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium transition focus:outline-none";
   const styles =
     variant === "outline"
       ? "border border-slate-200 bg-white text-slate-900 hover:bg-slate-50"
@@ -67,11 +68,23 @@ function Button({ className = "", variant = "default", children, asChild = false
 }
 
 function Input({ className = "", ...props }) {
-  return <input className={cn("w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:border-slate-400", className)} {...props} />;
+  return (
+    <input
+      className={cn(
+        "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:border-slate-400",
+        className
+      )}
+      {...props}
+    />
+  );
 }
 
 function Badge({ className = "", children }) {
-  return <span className={cn("inline-flex items-center rounded-full px-3 py-1 text-xs font-medium", className)}>{children}</span>;
+  return (
+    <span className={cn("inline-flex items-center rounded-full px-3 py-1 text-xs font-medium", className)}>
+      {children}
+    </span>
+  );
 }
 
 const defaultBrand = {
@@ -95,7 +108,6 @@ const defaultInsurers = [
   { name: "NH농협손해보험", category: "손해보험", logoText: "NH", gaPortal: "https://www.nhfire.co.kr/fc/fd.nhfire", claimsPage: "https://www.nhfire.co.kr/customer/bilgdcm/retrieveBilgDcmList.nhfire", disclosure: "https://www.nhfire.co.kr/announce/productAnnounce/retrieveInsuranceProductsAnnounce.nhfire", customerCenter: "1644-9000", claimsFax: "0505-060-7000", monitoring: "1644-9600" },
   { name: "MG손해보험", category: "손해보험", logoText: "MG", gaPortal: "#", claimsPage: "#", disclosure: "https://www.mggeneralins.com/PB031210DM.scp?menuId=MN0803006", customerCenter: "1588-5959", claimsFax: "입력 필요", monitoring: "입력 필요" },
   { name: "하나손해보험", category: "손해보험", logoText: "HN", gaPortal: "https://sfa.saleshana.com/wq/login", claimsPage: "https://www.hanainsure.co.kr/w/claim/carReward/rewardDocumentGuide", disclosure: "https://www.hanainsure.co.kr/w/disclosure/product/saleProduct", customerCenter: "1566-3000", claimsFax: "0505-170-0765", monitoring: "1660-4590" },
-
   { name: "교보생명", category: "생명보험", logoText: "KBL", gaPortal: "https://sso.kyobo.com:5443/3rdParty/certLoginFormPage.jsp?NONCE=L0QAIukL10imUU8cIf3nEt0NYqKI2gQfrNJzNco%2BvMaSuXhvHiV5XRgUsNTj9LHswxmKP9w99NASh7CJt%2Fdg7g%3D%3D&UURL=https%3A%2F%2Fsso.kyobo.com%3A5443%2Fnls3%2Ffcs", claimsPage: "https://www.kyobo.com/dgt/web/customer/support/need-papers/list", disclosure: "https://www.kyobo.com/dgt/web/product-official/all-product/search", customerCenter: "1588-1001", claimsFax: "콜센터 가상번호", monitoring: "1588-1636" },
   { name: "삼성생명", category: "생명보험", logoText: "SL", gaPortal: "https://connectplus.samsunglife.com:10443/gasso/login?contextType=external&username=string&password=secure_string&challenge_url=https%3A%2F%2Fconnectplus.samsunglife.com%3A10443%2Fgasso%2Flogin&reques", claimsPage: "https://www.samsunglife.com/individual/mysamsunglife/insurance/internet/MDP-MYINT020110M", disclosure: "https://www.samsunglife.com/individual/products/disclosure/sales/PDO-PRPRI010110M", customerCenter: "1588-3114", claimsFax: "콜센터 가상번호", monitoring: "1588-3115" },
   { name: "KB생명", category: "생명보험", logoText: "KB", gaPortal: "https://sfa.kblife.co.kr/scr/m/sfa-login?request=sfaLogin", claimsPage: "https://www.kblife.co.kr/customer-center/informRequiredDocument.do", disclosure: "https://www.kblife.co.kr/customer-common/productList.do", customerCenter: "1588-3374", claimsFax: "02-6220-9912", monitoring: "1588-9922" },
@@ -156,7 +168,13 @@ function Header({ activeTop, setActiveTop, brand, onOpenAdmin, isAdmin }) {
 
         <nav className="hidden items-center gap-5 md:flex">
           {menu.map((item) => (
-            <button key={item.label} onClick={() => handleClick(item)} className={`text-sm font-medium transition ${item.key && activeTop === item.key ? "text-slate-950" : "text-slate-600 hover:text-slate-950"}`}>
+            <button
+              key={item.label}
+              onClick={() => handleClick(item)}
+              className={`text-sm font-medium transition ${
+                item.key && activeTop === item.key ? "text-slate-950" : "text-slate-600 hover:text-slate-950"
+              }`}
+            >
               {item.label}
             </button>
           ))}
@@ -175,11 +193,25 @@ function Header({ activeTop, setActiveTop, brand, onOpenAdmin, isAdmin }) {
         <div className="border-t border-slate-200 bg-white md:hidden">
           <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4">
             {menu.map((item) => (
-              <button key={item.label} onClick={() => { handleClick(item); setOpen(false); }} className="rounded-xl px-2 py-2 text-left text-sm font-medium text-slate-700">
+              <button
+                key={item.label}
+                onClick={() => {
+                  handleClick(item);
+                  setOpen(false);
+                }}
+                className="rounded-xl px-2 py-2 text-left text-sm font-medium text-slate-700"
+              >
                 {item.label}
               </button>
             ))}
-            <Button variant="outline" className="rounded-xl" onClick={() => { onOpenAdmin(); setOpen(false); }}>
+            <Button
+              variant="outline"
+              className="rounded-xl"
+              onClick={() => {
+                onOpenAdmin();
+                setOpen(false);
+              }}
+            >
               {isAdmin ? "관리자" : "관리자 로그인"}
             </Button>
           </div>
@@ -199,7 +231,9 @@ function Hero({ brand }) {
       <div className="relative mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-24">
         <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr]">
           <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }} className="flex flex-col justify-center">
-            <Badge className="mb-4 w-fit rounded-full border-0 bg-emerald-600 px-4 py-1 text-sm text-white hover:bg-emerald-600">YOURS ASSET INSURANCE PORTAL</Badge>
+            <Badge className="mb-4 w-fit rounded-full border-0 bg-emerald-600 px-4 py-1 text-sm text-white hover:bg-emerald-600">
+              YOURS ASSET INSURANCE PORTAL
+            </Badge>
             <h1 className="max-w-4xl text-4xl font-black tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
               꼭 필요한 보험사 업무 정보를
               <br />
@@ -209,12 +243,14 @@ function Hero({ brand }) {
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">{brand.sub}</p>
             <div className="mt-8 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4">
-              {[["보험사전산", "GA포탈 연결"], ["고객센터", "연락처·팩스·서류"], ["상품공시실", "공시 링크 연결"], ["실시간수정", "관리자 수정 가능"]].map(([title, desc]) => (
-                <div key={title} className="rounded-2xl border border-white/70 bg-white/80 p-4 shadow-sm backdrop-blur">
-                  <p className="text-sm font-black text-slate-900">{title}</p>
-                  <p className="mt-1 text-xs text-slate-500">{desc}</p>
-                </div>
-              ))}
+              {[["보험사전산", "GA포탈 연결"], ["고객센터", "연락처·팩스·서류"], ["상품공시실", "공시 링크 연결"], ["실시간수정", "관리자 수정 가능"]].map(
+                ([title, desc]) => (
+                  <div key={title} className="rounded-2xl border border-white/70 bg-white/80 p-4 shadow-sm backdrop-blur">
+                    <p className="text-sm font-black text-slate-900">{title}</p>
+                    <p className="mt-1 text-xs text-slate-500">{desc}</p>
+                  </div>
+                )
+              )}
             </div>
           </motion.div>
 
@@ -227,7 +263,9 @@ function Hero({ brand }) {
                   const Icon = item.icon;
                   return (
                     <div key={item.key} className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-4">
-                      <span className="rounded-xl bg-emerald-50 p-2"><Icon className="h-4 w-4 text-emerald-700" /></span>
+                      <span className="rounded-xl bg-emerald-50 p-2">
+                        <Icon className="h-4 w-4 text-emerald-700" />
+                      </span>
                       <div>
                         <p className="font-medium text-slate-800">{item.title}</p>
                         <p className="text-xs text-slate-500">{item.desc}</p>
@@ -265,9 +303,21 @@ function About() {
 
 function Features() {
   const features = [
-    { icon: ShieldCheck, title: "카테고리형 포털 구조", desc: "첫 화면에서 바로 보험사 버튼을 노출하지 않고 상단 카테고리에서 원하는 기능으로 진입하도록 정리했습니다." },
-    { icon: Users, title: "원수사별 버튼형 UI", desc: "각 원수사를 로고형 심볼과 회사명을 결합한 버튼 카드로 구성해 클릭 즉시 관련 링크로 이동할 수 있게 했습니다." },
-    { icon: BadgeCheck, title: "운영용 데이터 구조", desc: "GA 영업포탈, 상품공시실, 고객센터 데이터를 보험사별로 분리해 나중에 값만 교체해도 바로 운영할 수 있게 설계했습니다." },
+    {
+      icon: ShieldCheck,
+      title: "카테고리형 포털 구조",
+      desc: "첫 화면에서 바로 보험사 버튼을 노출하지 않고 상단 카테고리에서 원하는 기능으로 진입하도록 정리했습니다.",
+    },
+    {
+      icon: Users,
+      title: "원수사별 버튼형 UI",
+      desc: "각 원수사를 로고형 심볼과 회사명을 결합한 버튼 카드로 구성해 클릭 즉시 관련 링크로 이동할 수 있게 했습니다.",
+    },
+    {
+      icon: BadgeCheck,
+      title: "운영용 데이터 구조",
+      desc: "GA 영업포탈, 상품공시실, 고객센터 데이터를 보험사별로 분리해 나중에 값만 교체해도 바로 운영할 수 있게 설계했습니다.",
+    },
   ];
 
   return (
@@ -283,7 +333,9 @@ function Features() {
             return (
               <Card key={feature.title} className="rounded-[24px] border-slate-200 shadow-sm">
                 <CardContent className="p-7">
-                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-900 text-white"><Icon className="h-5 w-5" /></div>
+                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-900 text-white">
+                    <Icon className="h-5 w-5" />
+                  </div>
                   <h3 className="text-xl font-black text-slate-950">{feature.title}</h3>
                   <p className="mt-3 text-sm leading-7 text-slate-600">{feature.desc}</p>
                 </CardContent>
@@ -344,10 +396,30 @@ function SupportCard({ item }) {
           </div>
         </div>
         <div className="mt-5 grid gap-3 text-sm">
-          <div className="rounded-2xl bg-slate-50 p-4"><p className="flex items-center gap-2 text-xs font-semibold tracking-wide text-slate-500"><Phone className="h-3.5 w-3.5" /> 고객센터 연락처</p><p className="mt-1 text-base font-black text-slate-950">{item.customerCenter}</p></div>
-          <div className="rounded-2xl bg-slate-50 p-4"><p className="flex items-center gap-2 text-xs font-semibold tracking-wide text-slate-500"><FileText className="h-3.5 w-3.5" /> 보험금 청구 팩스번호</p><p className="mt-1 text-base font-black text-slate-950">{item.claimsFax}</p></div>
-          <div className="rounded-2xl bg-slate-50 p-4"><p className="flex items-center gap-2 text-xs font-semibold tracking-wide text-slate-500"><Bell className="h-3.5 w-3.5" /> 모니터링 연락처</p><p className="mt-1 text-base font-black text-slate-950">{item.monitoring}</p></div>
-          <button type="button" onClick={openClaims} disabled={!hasClaimsDoc} className="flex items-center justify-between rounded-2xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-800 transition hover:bg-slate-50 disabled:cursor-default disabled:opacity-60">
+          <div className="rounded-2xl bg-slate-50 p-4">
+            <p className="flex items-center gap-2 text-xs font-semibold tracking-wide text-slate-500">
+              <Phone className="h-3.5 w-3.5" /> 고객센터 연락처
+            </p>
+            <p className="mt-1 text-base font-black text-slate-950">{item.customerCenter}</p>
+          </div>
+          <div className="rounded-2xl bg-slate-50 p-4">
+            <p className="flex items-center gap-2 text-xs font-semibold tracking-wide text-slate-500">
+              <FileText className="h-3.5 w-3.5" /> 보험금 청구 팩스번호
+            </p>
+            <p className="mt-1 text-base font-black text-slate-950">{item.claimsFax}</p>
+          </div>
+          <div className="rounded-2xl bg-slate-50 p-4">
+            <p className="flex items-center gap-2 text-xs font-semibold tracking-wide text-slate-500">
+              <Bell className="h-3.5 w-3.5" /> 모니터링 연락처
+            </p>
+            <p className="mt-1 text-base font-black text-slate-950">{item.monitoring}</p>
+          </div>
+          <button
+            type="button"
+            onClick={openClaims}
+            disabled={!hasClaimsDoc}
+            className="flex items-center justify-between rounded-2xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-800 transition hover:bg-slate-50 disabled:cursor-default disabled:opacity-60"
+          >
             <span>보험금 청구서류 다운로드</span>
             <ExternalLink className="h-4 w-4 text-slate-400" />
           </button>
@@ -361,7 +433,10 @@ function Directory({ activeTop, setActiveTop, insurers }) {
   const [query, setQuery] = useState("");
   const [line, setLine] = useState("손해보험");
 
-  const filtered = useMemo(() => insurers.filter((item) => item.category === line && item.name.toLowerCase().includes(query.toLowerCase())), [query, line, insurers]);
+  const filtered = useMemo(
+    () => insurers.filter((item) => item.category === line && item.name.toLowerCase().includes(query.toLowerCase())),
+    [query, line, insurers]
+  );
   const activeMeta = topCategories.find((c) => c.key === activeTop);
 
   const getHref = (item) => {
@@ -383,7 +458,9 @@ function Directory({ activeTop, setActiveTop, insurers }) {
         <div>
           <p className="text-sm font-bold tracking-[0.2em] text-slate-500">DIRECTORY</p>
           <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">상단 카테고리에서 선택한 기능별로 원수사를 확인하세요</h2>
-          <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">현재 선택: <span className="font-bold text-slate-950">{activeMeta?.title}</span></p>
+          <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">
+            현재 선택: <span className="font-bold text-slate-950">{activeMeta?.title}</span>
+          </p>
         </div>
         <div className="relative min-w-[260px]">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -396,7 +473,13 @@ function Directory({ activeTop, setActiveTop, insurers }) {
           const Icon = item.icon;
           const active = activeTop === item.key;
           return (
-            <button key={item.key} onClick={() => setActiveTop(item.key)} className={`rounded-[24px] border p-5 text-left transition ${active ? "border-slate-900 bg-slate-900 text-white shadow-lg" : "border-slate-200 bg-white text-slate-900 hover:bg-slate-50"}`}>
+            <button
+              key={item.key}
+              onClick={() => setActiveTop(item.key)}
+              className={`rounded-[24px] border p-5 text-left transition ${
+                active ? "border-slate-900 bg-slate-900 text-white shadow-lg" : "border-slate-200 bg-white text-slate-900 hover:bg-slate-50"
+              }`}
+            >
               <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-2xl ${active ? "bg-white/15" : "bg-slate-100"}`}>
                 <Icon className={`h-5 w-5 ${active ? "text-white" : "text-slate-700"}`} />
               </div>
@@ -408,14 +491,26 @@ function Directory({ activeTop, setActiveTop, insurers }) {
       </div>
 
       <div className="mt-8 flex flex-wrap gap-3">
-        <Button variant={line === "손해보험" ? "default" : "outline"} className="rounded-xl" onClick={() => setLine("손해보험")}>손해보험</Button>
-        <Button variant={line === "생명보험" ? "default" : "outline"} className="rounded-xl" onClick={() => setLine("생명보험")}>생명보험</Button>
+        <Button variant={line === "손해보험" ? "default" : "outline"} className="rounded-xl" onClick={() => setLine("손해보험")}>
+          손해보험
+        </Button>
+        <Button variant={line === "생명보험" ? "default" : "outline"} className="rounded-xl" onClick={() => setLine("생명보험")}>
+          생명보험
+        </Button>
       </div>
 
       {activeTop === "support" ? (
-        <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{filtered.map((item) => <SupportCard key={item.name} item={item} />)}</div>
+        <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {filtered.map((item) => (
+            <SupportCard key={item.name} item={item} />
+          ))}
+        </div>
       ) : (
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{filtered.map((item) => <InsurerButton key={item.name} item={item} href={getHref(item)} helper={getHelper(item)} />)}</div>
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filtered.map((item) => (
+            <InsurerButton key={item.name} item={item} href={getHref(item)} helper={getHelper(item)} />
+          ))}
+        </div>
       )}
     </section>
   );
@@ -446,11 +541,7 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
 
   const updateSelectedInsurer = (field, value) => {
     if (!selectedInsurer) return;
-    setInsurers(
-      insurers.map((item) =>
-        item.name === selectedInsurer.name ? { ...item, [field]: value } : item
-      )
-    );
+    setInsurers(insurers.map((item) => (item.name === selectedInsurer.name ? { ...item, [field]: value } : item)));
   };
 
   const exportJson = () => {
@@ -484,7 +575,7 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
       await signInWithEmailAndPassword(auth, email, password);
       setPassword("");
       alert("관리자 로그인 완료");
-    } catch (error) {
+    } catch {
       alert("로그인 실패: 이메일 또는 비밀번호를 확인해주세요.");
     }
   };
@@ -503,8 +594,15 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
             <h3 className="text-2xl font-black text-slate-950">홈페이지 내용 수정</h3>
           </div>
           <div className="flex items-center gap-2">
-            {user && <Button variant="outline" onClick={handleLogout}><LogOut className="mr-2 h-4 w-4" />로그아웃</Button>}
-            <Button variant="outline" onClick={onClose}>닫기</Button>
+            {user && (
+              <Button variant="outline" onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                로그아웃
+              </Button>
+            )}
+            <Button variant="outline" onClick={onClose}>
+              닫기
+            </Button>
           </div>
         </div>
 
@@ -516,18 +614,27 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
                 <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="관리자 이메일" className="h-12 rounded-xl" />
                 <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="비밀번호" className="mt-3 h-12 rounded-xl" />
                 <Button className="mt-4 h-12 w-full rounded-xl" onClick={handleLogin}>
-                  <Mail className="mr-2 h-4 w-4" />관리자 로그인
+                  <Mail className="mr-2 h-4 w-4" />
+                  관리자 로그인
                 </Button>
-                <p className="mt-3 text-xs leading-6 text-slate-500">설계사들은 로그인 없이 열람만 가능하고, 관리자는 Firebase에 등록한 이메일/비밀번호로 로그인해 수정할 수 있습니다.</p>
+                <p className="mt-3 text-xs leading-6 text-slate-500">
+                  설계사들은 로그인 없이 열람만 가능하고, 관리자는 Firebase에 등록한 이메일/비밀번호로 로그인해 수정할 수 있습니다.
+                </p>
               </CardContent>
             </Card>
           </div>
         ) : (
           <div className="p-6">
             <div className="mb-6 flex flex-wrap gap-3">
-              <Button variant={adminTab === "brand" ? "default" : "outline"} className="rounded-xl" onClick={() => setAdminTab("brand")}>기본 정보 수정</Button>
-              <Button variant={adminTab === "insurer" ? "default" : "outline"} className="rounded-xl" onClick={() => setAdminTab("insurer")}>보험사별 정보 수정</Button>
-              <Button variant={adminTab === "backup" ? "default" : "outline"} className="rounded-xl" onClick={() => setAdminTab("backup")}>백업 / 복원</Button>
+              <Button variant={adminTab === "brand" ? "default" : "outline"} className="rounded-xl" onClick={() => setAdminTab("brand")}>
+                기본 정보 수정
+              </Button>
+              <Button variant={adminTab === "insurer" ? "default" : "outline"} className="rounded-xl" onClick={() => setAdminTab("insurer")}>
+                보험사별 정보 수정
+              </Button>
+              <Button variant={adminTab === "backup" ? "default" : "outline"} className="rounded-xl" onClick={() => setAdminTab("backup")}>
+                백업 / 복원
+              </Button>
             </div>
 
             {adminTab === "brand" && (
@@ -539,8 +646,18 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
                       <Input value={brand.company} onChange={(e) => setBrand({ ...brand, company: e.target.value })} placeholder="회사명" className="h-11 rounded-xl" />
                       <Input value={brand.phone} onChange={(e) => setBrand({ ...brand, phone: e.target.value })} placeholder="대표번호" className="h-11 rounded-xl" />
                       <Input value={brand.accent} onChange={(e) => setBrand({ ...brand, accent: e.target.value })} placeholder="강조 문구" className="h-11 rounded-xl" />
-                      <textarea value={brand.sub} onChange={(e) => setBrand({ ...brand, sub: e.target.value })} className="min-h-[130px] w-full rounded-xl border border-slate-200 p-3 text-sm outline-none focus:border-slate-400" placeholder="메인 소개 문구" />
-                      <textarea value={brand.logoSrc} onChange={(e) => setBrand({ ...brand, logoSrc: e.target.value })} className="min-h-[120px] w-full rounded-xl border border-slate-200 p-3 text-xs outline-none focus:border-slate-400" placeholder="로고 이미지 URL 또는 base64" />
+                      <textarea
+                        value={brand.sub}
+                        onChange={(e) => setBrand({ ...brand, sub: e.target.value })}
+                        className="min-h-[130px] w-full rounded-xl border border-slate-200 p-3 text-sm outline-none focus:border-slate-400"
+                        placeholder="메인 소개 문구"
+                      />
+                      <textarea
+                        value={brand.logoSrc}
+                        onChange={(e) => setBrand({ ...brand, logoSrc: e.target.value })}
+                        className="min-h-[120px] w-full rounded-xl border border-slate-200 p-3 text-xs outline-none focus:border-slate-400"
+                        placeholder="로고 이미지 URL 또는 base64"
+                      />
                     </div>
                   </CardContent>
                 </Card>
@@ -551,10 +668,13 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
                     <div className="mt-4 space-y-3 text-sm leading-7 text-slate-600">
                       <p>회사명, 대표번호, 메인 문구는 여기서 바로 바꿀 수 있습니다.</p>
                       <p>보험사별 고객센터 번호, 팩스번호, 모니터링 연락처, 영업포탈 링크, 상품공시실 링크는 <span className="font-bold text-slate-900">보험사별 정보 수정</span> 탭에서 바꾸면 됩니다.</p>
-                      <p>저장 버튼을 누르면 Firebase에 저장되고, 사이트에 즉시 반영됩니다.</p>
+                      <p>저장 버튼을 누르면 Firebase에 저장되고, 사이트에 바로 반영됩니다.</p>
                     </div>
                     <div className="mt-6">
-                      <Button onClick={onSave}><Save className="mr-2 h-4 w-4" />실시간 저장</Button>
+                      <Button onClick={onSave}>
+                        <Save className="mr-2 h-4 w-4" />
+                        실시간 저장
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -575,7 +695,9 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
                           key={item.name}
                           type="button"
                           onClick={() => setSelectedInsurerName(item.name)}
-                          className={`w-full rounded-2xl border px-4 py-3 text-left transition ${selectedInsurerName === item.name ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 bg-white text-slate-900 hover:bg-slate-50"}`}
+                          className={`w-full rounded-2xl border px-4 py-3 text-left transition ${
+                            selectedInsurerName === item.name ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 bg-white text-slate-900 hover:bg-slate-50"
+                          }`}
                         >
                           <p className="text-sm font-black">{item.name}</p>
                           <p className={`mt-1 text-xs ${selectedInsurerName === item.name ? "text-slate-200" : "text-slate-500"}`}>{item.category}</p>
@@ -600,15 +722,23 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
                         <div className="mt-6 grid gap-4 md:grid-cols-2">
                           <div>
                             <p className="mb-2 text-sm font-semibold text-slate-700">보험사명</p>
-                            <Input value={selectedInsurer.name} onChange={(e) => {
-                              const newName = e.target.value;
-                              setInsurers(insurers.map((item) => item.name === selectedInsurer.name ? { ...item, name: newName } : item));
-                              setSelectedInsurerName(newName);
-                            }} className="h-11 rounded-xl" />
+                            <Input
+                              value={selectedInsurer.name}
+                              onChange={(e) => {
+                                const newName = e.target.value;
+                                setInsurers(insurers.map((item) => (item.name === selectedInsurer.name ? { ...item, name: newName } : item)));
+                                setSelectedInsurerName(newName);
+                              }}
+                              className="h-11 rounded-xl"
+                            />
                           </div>
                           <div>
                             <p className="mb-2 text-sm font-semibold text-slate-700">카테고리</p>
-                            <select value={selectedInsurer.category} onChange={(e) => updateSelectedInsurer("category", e.target.value)} className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-slate-400">
+                            <select
+                              value={selectedInsurer.category}
+                              onChange={(e) => updateSelectedInsurer("category", e.target.value)}
+                              className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-slate-400"
+                            >
                               <option value="손해보험">손해보험</option>
                               <option value="생명보험">생명보험</option>
                             </select>
@@ -644,7 +774,10 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
                         </div>
 
                         <div className="mt-6 flex gap-3">
-                          <Button onClick={onSave}><Save className="mr-2 h-4 w-4" />실시간 저장</Button>
+                          <Button onClick={onSave}>
+                            <Save className="mr-2 h-4 w-4" />
+                            실시간 저장
+                          </Button>
                         </div>
                       </>
                     ) : (
@@ -661,10 +794,17 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
                   <h4 className="text-xl font-black text-slate-950">백업 / 복원</h4>
                   <p className="mt-2 text-sm leading-6 text-slate-500">JSON 파일로 현재 데이터를 백업하거나, 이전에 저장한 파일을 다시 불러올 수 있습니다.</p>
                   <div className="mt-6 flex flex-wrap gap-3">
-                    <Button onClick={onSave}><Save className="mr-2 h-4 w-4" />실시간 저장</Button>
-                    <Button variant="outline" onClick={exportJson}><Download className="mr-2 h-4 w-4" />JSON 내보내기</Button>
+                    <Button onClick={onSave}>
+                      <Save className="mr-2 h-4 w-4" />
+                      실시간 저장
+                    </Button>
+                    <Button variant="outline" onClick={exportJson}>
+                      <Download className="mr-2 h-4 w-4" />
+                      JSON 내보내기
+                    </Button>
                     <label className="inline-flex cursor-pointer items-center rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
-                      <Upload className="mr-2 h-4 w-4" />JSON 불러오기
+                      <Upload className="mr-2 h-4 w-4" />
+                      JSON 불러오기
                       <input type="file" accept="application/json" className="hidden" onChange={(e) => importJson(e.target.files?.[0])} />
                     </label>
                   </div>
@@ -754,12 +894,34 @@ export default function YoureAssetInsurancePortal() {
     let unsubAuth = () => {};
 
     async function setup() {
-      await initializeSiteData(defaultBrand, defaultInsurers);
-      unsubBrand = subscribeBrand((data) => setBrand(data));
-      unsubInsurers = subscribeInsurers((items) => setInsurers(items));
       unsubAuth = onAuthStateChanged(auth, (firebaseUser) => {
         setUser(firebaseUser);
       });
+
+      try {
+        await initializeSiteData(defaultBrand, defaultInsurers);
+      } catch (error) {
+        console.warn("초기 데이터 자동 생성은 건너뜁니다.", error);
+      }
+
+      try {
+        unsubBrand = subscribeBrand((data) => {
+          if (data) setBrand(data);
+        });
+      } catch (error) {
+        console.warn("브랜드 데이터 구독 중 오류가 발생했습니다.", error);
+      }
+
+      try {
+        unsubInsurers = subscribeInsurers((items) => {
+          if (Array.isArray(items) && items.length > 0) {
+            setInsurers(items);
+          }
+        });
+      } catch (error) {
+        console.warn("보험사 데이터 구독 중 오류가 발생했습니다.", error);
+      }
+
       setReady(true);
     }
 
@@ -778,6 +940,7 @@ export default function YoureAssetInsurancePortal() {
       await saveInsurers(insurers);
       alert("Firebase에 저장되었습니다. 사이트에 바로 반영됩니다.");
     } catch (error) {
+      console.error(error);
       alert("저장 중 오류가 발생했습니다.");
     }
   };
