@@ -571,14 +571,15 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
   };
 
   const handleLogin = async () => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      setPassword("");
-      alert("관리자 로그인 완료");
-    } catch {
-      alert("로그인 실패: 이메일 또는 비밀번호를 확인해주세요.");
-    }
-  };
+  try {
+    await signInWithEmailAndPassword(auth, email.trim(), password);
+    setPassword("");
+    alert("관리자 로그인 완료");
+  } catch (error) {
+    console.error("login error:", error);
+    alert(`로그인 실패: ${error.code}`);
+  }
+};
 
   const handleLogout = async () => {
     await signOut(auth);
