@@ -38,7 +38,16 @@ function cn(...classes) {
 }
 
 function Card({ className = "", children }) {
-  return <div className={cn("rounded-2xl border border-slate-200 bg-white", className)}>{children}</div>;
+  return (
+    <div
+      className={cn(
+        "rounded-[28px] border border-[var(--border)] bg-[var(--card)] shadow-[0_16px_50px_rgba(15,23,42,0.07)] backdrop-blur-sm",
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
 }
 
 function CardContent({ className = "", children }) {
@@ -47,11 +56,11 @@ function CardContent({ className = "", children }) {
 
 function Button({ className = "", variant = "default", children, asChild = false, ...props }) {
   const base =
-    "inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium transition focus:outline-none";
+    "inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200 focus:outline-none";
   const styles =
     variant === "outline"
-      ? "border border-slate-200 bg-white text-slate-900 hover:bg-slate-50"
-      : "bg-slate-900 text-white hover:bg-slate-800";
+      ? "border border-[var(--border)] bg-white text-[var(--text)] hover:border-[var(--brand)]/30 hover:bg-[var(--soft)]"
+      : "bg-[var(--brand)] text-white hover:bg-[var(--brand-deep)] shadow-[0_10px_24px_rgba(20,35,52,0.18)]";
 
   if (asChild && React.isValidElement(children)) {
     return React.cloneElement(children, {
@@ -71,7 +80,7 @@ function Input({ className = "", ...props }) {
   return (
     <input
       className={cn(
-        "w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:border-slate-400",
+        "w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2.5 text-sm text-[var(--text)] outline-none transition focus:border-[var(--brand)]/40 focus:ring-4 focus:ring-[var(--brand)]/5",
         className
       )}
       {...props}
@@ -81,7 +90,12 @@ function Input({ className = "", ...props }) {
 
 function Badge({ className = "", children }) {
   return (
-    <span className={cn("inline-flex items-center rounded-full px-3 py-1 text-xs font-medium", className)}>
+    <span
+      className={cn(
+        "inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold",
+        className
+      )}
+    >
       {children}
     </span>
   );
@@ -134,7 +148,7 @@ function BrandLogo({ brand }) {
   return brand.logoSrc ? (
     <img src={brand.logoSrc} alt={brand.company} className="h-11 w-auto object-contain" />
   ) : (
-    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-white">
+    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--brand)] text-white shadow-sm">
       <Building2 className="h-5 w-5" />
     </div>
   );
@@ -156,13 +170,13 @@ function Header({ activeTop, setActiveTop, brand, onOpenAdmin, isAdmin }) {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/90 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[rgba(255,255,255,0.86)] backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:px-8">
         <a href="#home" className="flex items-center gap-3">
           <BrandLogo brand={brand} />
           <div>
-            <p className="text-lg font-bold tracking-tight text-slate-900">{brand.company}</p>
-            <p className="text-xs text-slate-500">보험사전산 · 고객센터 · 상품공시실</p>
+            <p className="text-lg font-black tracking-tight text-[var(--text)]">{brand.company}</p>
+            <p className="text-xs text-[var(--muted)]">보험사전산 · 고객센터 · 상품공시실</p>
           </div>
         </a>
 
@@ -171,8 +185,10 @@ function Header({ activeTop, setActiveTop, brand, onOpenAdmin, isAdmin }) {
             <button
               key={item.label}
               onClick={() => handleClick(item)}
-              className={`text-sm font-medium transition ${
-                item.key && activeTop === item.key ? "text-slate-950" : "text-slate-600 hover:text-slate-950"
+              className={`text-sm font-semibold transition ${
+                item.key && activeTop === item.key
+                  ? "text-[var(--brand)]"
+                  : "text-[var(--muted)] hover:text-[var(--text)]"
               }`}
             >
               {item.label}
@@ -184,13 +200,17 @@ function Header({ activeTop, setActiveTop, brand, onOpenAdmin, isAdmin }) {
           </Button>
         </nav>
 
-        <button className="rounded-xl border border-slate-200 p-2 md:hidden" onClick={() => setOpen(!open)} aria-label="menu">
+        <button
+          className="rounded-xl border border-[var(--border)] bg-white p-2 md:hidden"
+          onClick={() => setOpen(!open)}
+          aria-label="menu"
+        >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
       {open && (
-        <div className="border-t border-slate-200 bg-white md:hidden">
+        <div className="border-t border-[var(--border)] bg-white md:hidden">
           <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4">
             {menu.map((item) => (
               <button
@@ -199,7 +219,7 @@ function Header({ activeTop, setActiveTop, brand, onOpenAdmin, isAdmin }) {
                   handleClick(item);
                   setOpen(false);
                 }}
-                className="rounded-xl px-2 py-2 text-left text-sm font-medium text-slate-700"
+                className="rounded-xl px-2 py-2 text-left text-sm font-semibold text-[var(--text)]"
               >
                 {item.label}
               </button>
@@ -223,52 +243,73 @@ function Header({ activeTop, setActiveTop, brand, onOpenAdmin, isAdmin }) {
 
 function Hero({ brand }) {
   return (
-    <section id="home" className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-cyan-50">
+    <section
+      id="home"
+      className="relative overflow-hidden"
+      style={{
+        background:
+          "radial-gradient(circle at top right, rgba(197,168,111,0.18), transparent 25%), linear-gradient(135deg, #0f1b2d 0%, #152334 54%, #1d324b 100%)",
+      }}
+    >
       <div className="absolute inset-0">
-        <div className="absolute -left-10 top-10 h-56 w-56 rounded-full bg-emerald-100/70 blur-3xl" />
-        <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-cyan-100/70 blur-3xl" />
+        <div className="absolute -left-16 top-12 h-60 w-60 rounded-full bg-[rgba(197,168,111,0.14)] blur-3xl" />
+        <div className="absolute right-0 top-0 h-80 w-80 rounded-full bg-[rgba(255,255,255,0.08)] blur-3xl" />
       </div>
       <div className="relative mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-24">
         <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr]">
-          <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }} className="flex flex-col justify-center">
-            <Badge className="mb-4 w-fit rounded-full border-0 bg-emerald-600 px-4 py-1 text-sm text-white hover:bg-emerald-600">
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45 }}
+            className="flex flex-col justify-center"
+          >
+            <Badge className="mb-4 w-fit rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-sm text-white backdrop-blur">
               YOURS ASSET INSURANCE PORTAL
             </Badge>
-            <h1 className="max-w-4xl text-4xl font-black tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
+            <h1 className="max-w-4xl text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
               보험사 업무 정보를
               <br />
-              더 빠르고 깔끔하게 찾는
+              더 빠르고 품격 있게 찾는
               <br />
-              <span className="text-emerald-700">{brand.company} 보험 포털</span>
+              <span className="text-[var(--gold-soft)]">{brand.company} 보험 포털</span>
             </h1>
-            <p className="mt-6 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">{brand.sub}</p>
+            <p className="mt-6 max-w-2xl text-base leading-8 text-white/78 sm:text-lg">{brand.sub}</p>
             <div className="mt-8 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4">
-              {[["보험사전산", "GA포탈 연결"], ["고객센터", "연락처·팩스·서류"], ["상품공시실", "공시 링크 연결"], ["실시간수정", "관리자 수정 가능"]].map(
-                ([title, desc]) => (
-                  <div key={title} className="rounded-2xl border border-white/70 bg-white/80 p-4 shadow-sm backdrop-blur">
-                    <p className="text-sm font-black text-slate-900">{title}</p>
-                    <p className="mt-1 text-xs text-slate-500">{desc}</p>
-                  </div>
-                )
-              )}
+              {[
+                ["보험사전산", "GA포탈 연결"],
+                ["고객센터", "연락처·팩스·서류"],
+                ["상품공시실", "공시 링크 연결"],
+                ["실시간수정", "관리자 수정 가능"],
+              ].map(([title, desc]) => (
+                <div
+                  key={title}
+                  className="rounded-2xl border border-white/10 bg-white/8 p-4 shadow-sm backdrop-blur-md"
+                >
+                  <p className="text-sm font-black text-white">{title}</p>
+                  <p className="mt-1 text-xs text-white/65">{desc}</p>
+                </div>
+              ))}
             </div>
           </motion.div>
 
-          <Card className="rounded-[28px] border-white/80 bg-white/90 shadow-xl shadow-emerald-100/70 backdrop-blur">
+          <Card className="border-white/10 bg-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.18)] backdrop-blur-xl">
             <CardContent className="p-6 sm:p-8">
-              <p className="text-sm font-semibold text-emerald-700">QUICK GUIDE</p>
-              <h3 className="mt-1 text-2xl font-black text-slate-950">자주 찾는 업무를 카테고리별로 정리했습니다</h3>
+              <p className="text-sm font-semibold text-[var(--gold-soft)]">QUICK GUIDE</p>
+              <h3 className="mt-1 text-2xl font-black text-white">자주 찾는 업무를 카테고리별로 정리했습니다</h3>
               <div className="mt-6 space-y-3">
                 {topCategories.map((item) => {
                   const Icon = item.icon;
                   return (
-                    <div key={item.key} className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-4">
-                      <span className="rounded-xl bg-emerald-50 p-2">
-                        <Icon className="h-4 w-4 text-emerald-700" />
+                    <div
+                      key={item.key}
+                      className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/8 px-4 py-4"
+                    >
+                      <span className="rounded-xl bg-[rgba(197,168,111,0.14)] p-2">
+                        <Icon className="h-4 w-4 text-[var(--gold-soft)]" />
                       </span>
                       <div>
-                        <p className="font-medium text-slate-800">{item.title}</p>
-                        <p className="text-xs text-slate-500">{item.desc}</p>
+                        <p className="font-semibold text-white">{item.title}</p>
+                        <p className="text-xs text-white/65">{item.desc}</p>
                       </div>
                     </div>
                   );
@@ -282,18 +323,26 @@ function Hero({ brand }) {
   );
 }
 
-function About() {
+function About({ brand }) {
   return (
     <section id="about" className="mx-auto max-w-7xl px-4 py-14 lg:px-8 lg:py-20">
-      <div className="rounded-[32px] border border-emerald-100 bg-gradient-to-r from-emerald-50 to-white p-8 lg:p-10">
+      <div className="rounded-[32px] border border-[var(--border)] bg-[linear-gradient(135deg,#ffffff_0%,#fbf8f1_100%)] p-8 lg:p-10 shadow-[0_12px_40px_rgba(15,23,42,0.04)]">
         <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
-            <p className="text-sm font-bold tracking-[0.2em] text-emerald-700">ABOUT YOURS ASSET</p>
-            <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">보험 업무를 더 빠르게, 상담 연결은 더 자연스럽게</h2>
+            <p className="text-sm font-bold tracking-[0.2em] text-[var(--gold)]">ABOUT YOURS ASSET</p>
+            <h2 className="mt-3 text-3xl font-black tracking-tight text-[var(--text)] sm:text-4xl">
+              보험 업무를 더 빠르게, 상담 연결은 더 신뢰감 있게
+            </h2>
           </div>
-          <div className="space-y-4 text-base leading-8 text-slate-600">
-            <p>유어즈에셋은 고객이 자주 찾는 보험사 업무 정보를 더 쉽고 빠르게 확인할 수 있도록 실무형 포털 구조로 정리했습니다.</p>
-            <p>보험사전산, 고객센터, 상품공시실을 카테고리별로 나누고 손해보험과 생명보험을 구분해 필요한 보험사만 빠르게 찾을 수 있도록 구성했습니다.</p>
+          <div className="space-y-4 text-base leading-8 text-[var(--muted)]">
+            <p>
+              {brand.company}은 고객이 자주 찾는 보험사 업무 정보를 더 쉽고 빠르게 확인할 수 있도록
+              실무형 포털 구조로 정리했습니다.
+            </p>
+            <p>
+              보험사전산, 고객센터, 상품공시실을 카테고리별로 나누고 손해보험과 생명보험을 구분해
+              필요한 보험사만 빠르게 찾을 수 있도록 구성했습니다.
+            </p>
           </div>
         </div>
       </div>
@@ -321,23 +370,25 @@ function Features() {
   ];
 
   return (
-    <section id="service" className="bg-slate-50 py-16 lg:py-24">
+    <section id="service" className="bg-[var(--soft)] py-16 lg:py-24">
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
         <div className="max-w-2xl">
-          <p className="text-sm font-bold tracking-[0.2em] text-slate-500">SERVICE</p>
-          <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">실사용을 고려한 보험 업무 포털 구조</h2>
+          <p className="text-sm font-bold tracking-[0.2em] text-[var(--gold)]">SERVICE</p>
+          <h2 className="mt-3 text-3xl font-black tracking-tight text-[var(--text)] sm:text-4xl">
+            실사용을 고려한 보험 업무 포털 구조
+          </h2>
         </div>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {features.map((feature) => {
             const Icon = feature.icon;
             return (
-              <Card key={feature.title} className="rounded-[24px] border-slate-200 shadow-sm">
+              <Card key={feature.title} className="border-[var(--border)] bg-white">
                 <CardContent className="p-7">
-                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-900 text-white">
+                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--brand)] text-white">
                     <Icon className="h-5 w-5" />
                   </div>
-                  <h3 className="text-xl font-black text-slate-950">{feature.title}</h3>
-                  <p className="mt-3 text-sm leading-7 text-slate-600">{feature.desc}</p>
+                  <h3 className="text-xl font-black text-[var(--text)]">{feature.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-[var(--muted)]">{feature.desc}</p>
                 </CardContent>
               </Card>
             );
@@ -362,11 +413,13 @@ function InsurerButton({ item, href, helper }) {
 
   return (
     <button type="button" onClick={openLink} className={`w-full text-left ${clickable ? "cursor-pointer" : "cursor-default"}`}>
-      <div className="rounded-[24px] border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+      <div className="rounded-[24px] border border-[var(--border)] bg-white p-5 shadow-[0_10px_28px_rgba(15,23,42,0.05)] transition duration-200 hover:-translate-y-1 hover:border-[var(--brand)]/20 hover:shadow-[0_18px_38px_rgba(15,23,42,0.09)]">
         <div className="flex flex-col items-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-900 text-lg font-black text-white shadow-sm">{item.logoText}</div>
-          <p className="mt-4 text-center text-base font-black text-slate-950">{item.name}</p>
-          <p className="mt-1 text-center text-xs text-slate-500">{helper}</p>
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,var(--brand-deep),var(--brand))] text-lg font-black text-white shadow-sm">
+            {item.logoText}
+          </div>
+          <p className="mt-4 text-center text-base font-black text-[var(--text)]">{item.name}</p>
+          <p className="mt-1 text-center text-xs text-[var(--muted)]">{helper}</p>
         </div>
       </div>
     </button>
@@ -386,42 +439,44 @@ function SupportCard({ item }) {
   };
 
   return (
-    <Card className="rounded-[24px] border-slate-200 shadow-sm">
+    <Card className="border-[var(--border)] bg-white">
       <CardContent className="p-5">
         <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-900 text-sm font-black text-white">{item.logoText}</div>
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,var(--brand-deep),var(--brand))] text-sm font-black text-white">
+            {item.logoText}
+          </div>
           <div>
-            <h4 className="text-lg font-black text-slate-950">{item.name}</h4>
-            <p className="text-sm text-slate-500">고객센터 및 청구 안내</p>
+            <h4 className="text-lg font-black text-[var(--text)]">{item.name}</h4>
+            <p className="text-sm text-[var(--muted)]">고객센터 및 청구 안내</p>
           </div>
         </div>
         <div className="mt-5 grid gap-3 text-sm">
-          <div className="rounded-2xl bg-slate-50 p-4">
-            <p className="flex items-center gap-2 text-xs font-semibold tracking-wide text-slate-500">
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--soft)] p-4">
+            <p className="flex items-center gap-2 text-xs font-semibold tracking-wide text-[var(--muted)]">
               <Phone className="h-3.5 w-3.5" /> 고객센터 연락처
             </p>
-            <p className="mt-1 text-base font-black text-slate-950">{item.customerCenter}</p>
+            <p className="mt-1 text-base font-black text-[var(--text)]">{item.customerCenter}</p>
           </div>
-          <div className="rounded-2xl bg-slate-50 p-4">
-            <p className="flex items-center gap-2 text-xs font-semibold tracking-wide text-slate-500">
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--soft)] p-4">
+            <p className="flex items-center gap-2 text-xs font-semibold tracking-wide text-[var(--muted)]">
               <FileText className="h-3.5 w-3.5" /> 보험금 청구 팩스번호
             </p>
-            <p className="mt-1 text-base font-black text-slate-950">{item.claimsFax}</p>
+            <p className="mt-1 text-base font-black text-[var(--text)]">{item.claimsFax}</p>
           </div>
-          <div className="rounded-2xl bg-slate-50 p-4">
-            <p className="flex items-center gap-2 text-xs font-semibold tracking-wide text-slate-500">
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--soft)] p-4">
+            <p className="flex items-center gap-2 text-xs font-semibold tracking-wide text-[var(--muted)]">
               <Bell className="h-3.5 w-3.5" /> 모니터링 연락처
             </p>
-            <p className="mt-1 text-base font-black text-slate-950">{item.monitoring}</p>
+            <p className="mt-1 text-base font-black text-[var(--text)]">{item.monitoring}</p>
           </div>
           <button
             type="button"
             onClick={openClaims}
             disabled={!hasClaimsDoc}
-            className="flex items-center justify-between rounded-2xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-800 transition hover:bg-slate-50 disabled:cursor-default disabled:opacity-60"
+            className="flex items-center justify-between rounded-2xl border border-[var(--border)] bg-white px-4 py-3 text-sm font-medium text-[var(--text)] transition hover:bg-[var(--soft)] disabled:cursor-default disabled:opacity-60"
           >
             <span>보험금 청구서류 다운로드</span>
-            <ExternalLink className="h-4 w-4 text-slate-400" />
+            <ExternalLink className="h-4 w-4 text-[var(--muted)]" />
           </button>
         </div>
       </CardContent>
@@ -456,14 +511,16 @@ function Directory({ activeTop, setActiveTop, insurers }) {
     <section id="directory" className="mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-24">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="text-sm font-bold tracking-[0.2em] text-slate-500">DIRECTORY</p>
-          <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">상단 카테고리에서 선택한 기능별로 원수사를 확인하세요</h2>
-          <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">
-            현재 선택: <span className="font-bold text-slate-950">{activeMeta?.title}</span>
+          <p className="text-sm font-bold tracking-[0.2em] text-[var(--gold)]">DIRECTORY</p>
+          <h2 className="mt-3 text-3xl font-black tracking-tight text-[var(--text)] sm:text-4xl">
+            상단 카테고리에서 선택한 기능별로 원수사를 확인하세요
+          </h2>
+          <p className="mt-4 max-w-3xl text-base leading-7 text-[var(--muted)]">
+            현재 선택: <span className="font-bold text-[var(--text)]">{activeMeta?.title}</span>
           </p>
         </div>
         <div className="relative min-w-[260px]">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]" />
           <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="보험사명 검색" className="h-11 rounded-xl pl-10" />
         </div>
       </div>
@@ -477,14 +534,16 @@ function Directory({ activeTop, setActiveTop, insurers }) {
               key={item.key}
               onClick={() => setActiveTop(item.key)}
               className={`rounded-[24px] border p-5 text-left transition ${
-                active ? "border-slate-900 bg-slate-900 text-white shadow-lg" : "border-slate-200 bg-white text-slate-900 hover:bg-slate-50"
+                active
+                  ? "border-[var(--brand)] bg-[linear-gradient(135deg,var(--brand-deep),var(--brand))] text-white shadow-[0_16px_34px_rgba(20,35,52,0.18)]"
+                  : "border-[var(--border)] bg-white text-[var(--text)] hover:bg-[var(--soft)]"
               }`}
             >
-              <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-2xl ${active ? "bg-white/15" : "bg-slate-100"}`}>
-                <Icon className={`h-5 w-5 ${active ? "text-white" : "text-slate-700"}`} />
+              <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-2xl ${active ? "bg-white/15" : "bg-[var(--soft)]"}`}>
+                <Icon className={`h-5 w-5 ${active ? "text-white" : "text-[var(--brand)]"}`} />
               </div>
               <h3 className="text-lg font-black">{item.title}</h3>
-              <p className={`mt-2 text-sm leading-6 ${active ? "text-slate-200" : "text-slate-600"}`}>{item.desc}</p>
+              <p className={`mt-2 text-sm leading-6 ${active ? "text-white/75" : "text-[var(--muted)]"}`}>{item.desc}</p>
             </button>
           );
         })}
@@ -571,15 +630,15 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
   };
 
   const handleLogin = async () => {
-  try {
-    await signInWithEmailAndPassword(auth, email.trim(), password);
-    setPassword("");
-    alert("관리자 로그인 완료");
-  } catch (error) {
-    console.error("login error:", error);
-    alert(`로그인 실패: ${error.code}`);
-  }
-};
+    try {
+      await signInWithEmailAndPassword(auth, email.trim(), password);
+      setPassword("");
+      alert("관리자 로그인 완료");
+    } catch (error) {
+      console.error("login error:", error);
+      alert(`로그인 실패: ${error.code}`);
+    }
+  };
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -587,12 +646,12 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
   };
 
   return (
-    <div className="fixed inset-0 z-[80] bg-black/40 p-4">
-      <div className="mx-auto max-h-[92vh] max-w-7xl overflow-auto rounded-[28px] bg-white shadow-2xl">
-        <div className="sticky top-0 flex items-center justify-between border-b border-slate-200 bg-white px-6 py-4">
+    <div className="fixed inset-0 z-[80] bg-[rgba(6,10,18,0.55)] p-4 backdrop-blur-sm">
+      <div className="mx-auto max-h-[92vh] max-w-7xl overflow-auto rounded-[28px] border border-white/20 bg-[rgba(255,255,255,0.96)] shadow-2xl">
+        <div className="sticky top-0 flex items-center justify-between border-b border-[var(--border)] bg-white/90 px-6 py-4 backdrop-blur">
           <div>
-            <p className="text-sm font-semibold text-slate-500">관리자 설정</p>
-            <h3 className="text-2xl font-black text-slate-950">홈페이지 내용 수정</h3>
+            <p className="text-sm font-semibold text-[var(--muted)]">관리자 설정</p>
+            <h3 className="text-2xl font-black text-[var(--text)]">홈페이지 내용 수정</h3>
           </div>
           <div className="flex items-center gap-2">
             {user && (
@@ -609,16 +668,16 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
 
         {!user ? (
           <div className="p-6">
-            <Card className="mx-auto max-w-md rounded-[24px] border-slate-200 shadow-sm">
+            <Card className="mx-auto max-w-md border-[var(--border)] bg-white">
               <CardContent className="p-6">
-                <p className="mb-3 text-sm text-slate-500">관리자만 수정할 수 있습니다.</p>
+                <p className="mb-3 text-sm text-[var(--muted)]">관리자만 수정할 수 있습니다.</p>
                 <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="관리자 이메일" className="h-12 rounded-xl" />
                 <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="비밀번호" className="mt-3 h-12 rounded-xl" />
                 <Button className="mt-4 h-12 w-full rounded-xl" onClick={handleLogin}>
                   <Mail className="mr-2 h-4 w-4" />
                   관리자 로그인
                 </Button>
-                <p className="mt-3 text-xs leading-6 text-slate-500">
+                <p className="mt-3 text-xs leading-6 text-[var(--muted)]">
                   설계사들은 로그인 없이 열람만 가능하고, 관리자는 Firebase에 등록한 이메일/비밀번호로 로그인해 수정할 수 있습니다.
                 </p>
               </CardContent>
@@ -640,9 +699,9 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
 
             {adminTab === "brand" && (
               <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-                <Card className="rounded-[24px] border-slate-200 shadow-sm">
+                <Card className="border-[var(--border)] bg-white">
                   <CardContent className="p-6">
-                    <h4 className="text-xl font-black text-slate-950">회사 기본 정보</h4>
+                    <h4 className="text-xl font-black text-[var(--text)]">회사 기본 정보</h4>
                     <div className="mt-4 space-y-3">
                       <Input value={brand.company} onChange={(e) => setBrand({ ...brand, company: e.target.value })} placeholder="회사명" className="h-11 rounded-xl" />
                       <Input value={brand.phone} onChange={(e) => setBrand({ ...brand, phone: e.target.value })} placeholder="대표번호" className="h-11 rounded-xl" />
@@ -650,25 +709,29 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
                       <textarea
                         value={brand.sub}
                         onChange={(e) => setBrand({ ...brand, sub: e.target.value })}
-                        className="min-h-[130px] w-full rounded-xl border border-slate-200 p-3 text-sm outline-none focus:border-slate-400"
+                        className="min-h-[130px] w-full rounded-xl border border-[var(--border)] p-3 text-sm outline-none focus:border-[var(--brand)]/40"
                         placeholder="메인 소개 문구"
                       />
                       <textarea
                         value={brand.logoSrc}
                         onChange={(e) => setBrand({ ...brand, logoSrc: e.target.value })}
-                        className="min-h-[120px] w-full rounded-xl border border-slate-200 p-3 text-xs outline-none focus:border-slate-400"
+                        className="min-h-[120px] w-full rounded-xl border border-[var(--border)] p-3 text-xs outline-none focus:border-[var(--brand)]/40"
                         placeholder="로고 이미지 URL 또는 base64"
                       />
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card className="rounded-[24px] border-slate-200 shadow-sm">
+                <Card className="border-[var(--border)] bg-white">
                   <CardContent className="p-6">
-                    <h4 className="text-xl font-black text-slate-950">수정 안내</h4>
-                    <div className="mt-4 space-y-3 text-sm leading-7 text-slate-600">
+                    <h4 className="text-xl font-black text-[var(--text)]">수정 안내</h4>
+                    <div className="mt-4 space-y-3 text-sm leading-7 text-[var(--muted)]">
                       <p>회사명, 대표번호, 메인 문구는 여기서 바로 바꿀 수 있습니다.</p>
-                      <p>보험사별 고객센터 번호, 팩스번호, 모니터링 연락처, 영업포탈 링크, 상품공시실 링크는 <span className="font-bold text-slate-900">보험사별 정보 수정</span> 탭에서 바꾸면 됩니다.</p>
+                      <p>
+                        보험사별 고객센터 번호, 팩스번호, 모니터링 연락처, 영업포탈 링크, 상품공시실 링크는
+                        <span className="font-bold text-[var(--text)]"> 보험사별 정보 수정 </span>
+                        탭에서 바꾸면 됩니다.
+                      </p>
                       <p>저장 버튼을 누르면 Firebase에 저장되고, 사이트에 바로 반영됩니다.</p>
                     </div>
                     <div className="mt-6">
@@ -684,9 +747,9 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
 
             {adminTab === "insurer" && (
               <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
-                <Card className="rounded-[24px] border-slate-200 shadow-sm">
+                <Card className="border-[var(--border)] bg-white">
                   <CardContent className="p-5">
-                    <h4 className="text-lg font-black text-slate-950">보험사 선택</h4>
+                    <h4 className="text-lg font-black text-[var(--text)]">보험사 선택</h4>
                     <div className="mt-4">
                       <Input value={insurerSearch} onChange={(e) => setInsurerSearch(e.target.value)} placeholder="보험사 검색" className="h-11 rounded-xl" />
                     </div>
@@ -697,79 +760,66 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
                           type="button"
                           onClick={() => setSelectedInsurerName(item.name)}
                           className={`w-full rounded-2xl border px-4 py-3 text-left transition ${
-                            selectedInsurerName === item.name ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 bg-white text-slate-900 hover:bg-slate-50"
+                            selectedInsurerName === item.name
+                              ? "border-[var(--brand)] bg-[linear-gradient(135deg,var(--brand-deep),var(--brand))] text-white"
+                              : "border-[var(--border)] bg-white text-[var(--text)] hover:bg-[var(--soft)]"
                           }`}
                         >
                           <p className="text-sm font-black">{item.name}</p>
-                          <p className={`mt-1 text-xs ${selectedInsurerName === item.name ? "text-slate-200" : "text-slate-500"}`}>{item.category}</p>
+                          <p className={`mt-1 text-xs ${selectedInsurerName === item.name ? "text-white/75" : "text-[var(--muted)]"}`}>{item.category}</p>
                         </button>
                       ))}
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card className="rounded-[24px] border-slate-200 shadow-sm">
+                <Card className="border-[var(--border)] bg-white">
                   <CardContent className="p-6">
                     {selectedInsurer ? (
                       <>
-                        <div className="flex items-center gap-4">
-                          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-900 text-sm font-black text-white">{selectedInsurer.logoText}</div>
+                        <div className="flex items-center justify-between gap-3">
                           <div>
-                            <h4 className="text-2xl font-black text-slate-950">{selectedInsurer.name}</h4>
-                            <p className="text-sm text-slate-500">{selectedInsurer.category}</p>
+                            <p className="text-sm text-[var(--muted)]">선택 보험사</p>
+                            <h4 className="text-2xl font-black text-[var(--text)]">{selectedInsurer.name}</h4>
                           </div>
+                          <Badge className="bg-[var(--soft)] text-[var(--brand)]">{selectedInsurer.category}</Badge>
                         </div>
 
                         <div className="mt-6 grid gap-4 md:grid-cols-2">
                           <div>
-                            <p className="mb-2 text-sm font-semibold text-slate-700">보험사명</p>
-                            <Input
-                              value={selectedInsurer.name}
-                              onChange={(e) => {
-                                const newName = e.target.value;
-                                setInsurers(insurers.map((item) => (item.name === selectedInsurer.name ? { ...item, name: newName } : item)));
-                                setSelectedInsurerName(newName);
-                              }}
-                              className="h-11 rounded-xl"
-                            />
+                            <p className="mb-2 text-sm font-semibold text-[var(--text)]">보험사명</p>
+                            <Input value={selectedInsurer.name} onChange={(e) => updateSelectedInsurer("name", e.target.value)} className="h-11 rounded-xl" />
                           </div>
                           <div>
-                            <p className="mb-2 text-sm font-semibold text-slate-700">카테고리</p>
-                            <select
-                              value={selectedInsurer.category}
-                              onChange={(e) => updateSelectedInsurer("category", e.target.value)}
-                              className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-slate-400"
-                            >
-                              <option value="손해보험">손해보험</option>
-                              <option value="생명보험">생명보험</option>
-                            </select>
+                            <p className="mb-2 text-sm font-semibold text-[var(--text)]">구분</p>
+                            <Input value={selectedInsurer.category} onChange={(e) => updateSelectedInsurer("category", e.target.value)} className="h-11 rounded-xl" />
                           </div>
                           <div>
-                            <p className="mb-2 text-sm font-semibold text-slate-700">로고 약칭</p>
+                            <p className="mb-2 text-sm font-semibold text-[var(--text)]">로고 텍스트</p>
                             <Input value={selectedInsurer.logoText} onChange={(e) => updateSelectedInsurer("logoText", e.target.value)} className="h-11 rounded-xl" />
                           </div>
                           <div>
-                            <p className="mb-2 text-sm font-semibold text-slate-700">고객센터 연락처</p>
+                            <p className="mb-2 text-sm font-semibold text-[var(--text)]">고객센터</p>
                             <Input value={selectedInsurer.customerCenter} onChange={(e) => updateSelectedInsurer("customerCenter", e.target.value)} className="h-11 rounded-xl" />
                           </div>
                           <div>
-                            <p className="mb-2 text-sm font-semibold text-slate-700">보험금 청구 팩스번호</p>
+                            <p className="mb-2 text-sm font-semibold text-[var(--text)]">청구 팩스번호</p>
                             <Input value={selectedInsurer.claimsFax} onChange={(e) => updateSelectedInsurer("claimsFax", e.target.value)} className="h-11 rounded-xl" />
                           </div>
                           <div>
-                            <p className="mb-2 text-sm font-semibold text-slate-700">모니터링 연락처</p>
+                            <p className="mb-2 text-sm font-semibold text-[var(--text)]">모니터링 연락처</p>
                             <Input value={selectedInsurer.monitoring} onChange={(e) => updateSelectedInsurer("monitoring", e.target.value)} className="h-11 rounded-xl" />
                           </div>
                           <div className="md:col-span-2">
-                            <p className="mb-2 text-sm font-semibold text-slate-700">GA영업포탈 링크</p>
+                            <p className="mb-2 text-sm font-semibold text-[var(--text)]">GA 영업포탈 링크</p>
                             <Input value={selectedInsurer.gaPortal} onChange={(e) => updateSelectedInsurer("gaPortal", e.target.value)} className="h-11 rounded-xl" />
                           </div>
                           <div className="md:col-span-2">
-                            <p className="mb-2 text-sm font-semibold text-slate-700">보험금 청구서류 다운로드 링크</p>
+                            <p className="mb-2 text-sm font-semibold text-[var(--text)]">보험금 청구서류 링크</p>
                             <Input value={selectedInsurer.claimsPage} onChange={(e) => updateSelectedInsurer("claimsPage", e.target.value)} className="h-11 rounded-xl" />
                           </div>
                           <div className="md:col-span-2">
-                            <p className="mb-2 text-sm font-semibold text-slate-700">상품공시실 링크</p>
+                            <p className="mb-2 text-sm font-semibold text-[var(--text)]">상품공시실 링크</p>
                             <Input value={selectedInsurer.disclosure} onChange={(e) => updateSelectedInsurer("disclosure", e.target.value)} className="h-11 rounded-xl" />
                           </div>
                         </div>
@@ -782,7 +832,7 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
                         </div>
                       </>
                     ) : (
-                      <p className="text-sm text-slate-500">보험사를 선택해주세요.</p>
+                      <p className="text-sm text-[var(--muted)]">보험사를 선택해주세요.</p>
                     )}
                   </CardContent>
                 </Card>
@@ -790,10 +840,12 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
             )}
 
             {adminTab === "backup" && (
-              <Card className="rounded-[24px] border-slate-200 shadow-sm">
+              <Card className="border-[var(--border)] bg-white">
                 <CardContent className="p-6">
-                  <h4 className="text-xl font-black text-slate-950">백업 / 복원</h4>
-                  <p className="mt-2 text-sm leading-6 text-slate-500">JSON 파일로 현재 데이터를 백업하거나, 이전에 저장한 파일을 다시 불러올 수 있습니다.</p>
+                  <h4 className="text-xl font-black text-[var(--text)]">백업 / 복원</h4>
+                  <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                    JSON 파일로 현재 데이터를 백업하거나, 이전에 저장한 파일을 다시 불러올 수 있습니다.
+                  </p>
                   <div className="mt-6 flex flex-wrap gap-3">
                     <Button onClick={onSave}>
                       <Save className="mr-2 h-4 w-4" />
@@ -803,7 +855,7 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
                       <Download className="mr-2 h-4 w-4" />
                       JSON 내보내기
                     </Button>
-                    <label className="inline-flex cursor-pointer items-center rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
+                    <label className="inline-flex cursor-pointer items-center rounded-xl border border-[var(--border)] px-4 py-2 text-sm font-medium text-[var(--text)] hover:bg-[var(--soft)]">
                       <Upload className="mr-2 h-4 w-4" />
                       JSON 불러오기
                       <input type="file" accept="application/json" className="hidden" onChange={(e) => importJson(e.target.files?.[0])} />
@@ -819,155 +871,91 @@ function AdminModal({ open, onClose, user, brand, setBrand, insurers, setInsurer
   );
 }
 
-function Footer({ brand }) {
-  return (
-    <footer className="border-t border-slate-200 bg-white">
-      <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-8 text-sm text-slate-500 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-        <div>
-          <p className="font-bold text-slate-800">{brand.company}</p>
-          <p className="mt-1">보험사전산 · 고객센터 · 상품공시실</p>
-        </div>
-        <div className="flex flex-col gap-1 text-left lg:text-right">
-          <p>대표번호 {brand.phone}</p>
-          <p>© 2026 {brand.company}. All rights reserved.</p>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
-function useSeo(brand) {
-  useEffect(() => {
-    document.title = `${brand.company} 보험 포털 | 보험사전산 · 고객센터 · 상품공시실`;
-
-    const ensureMeta = (name, content, attr = "name") => {
-      let el = document.head.querySelector(`meta[${attr}="${name}"]`);
-      if (!el) {
-        el = document.createElement("meta");
-        el.setAttribute(attr, name);
-        document.head.appendChild(el);
-      }
-      el.setAttribute("content", content);
-    };
-
-    ensureMeta("description", `${brand.company} 보험 포털. 보험사전산, 고객센터, 상품공시실을 한곳에서 빠르게 찾을 수 있는 실무형 보험 홈페이지.`);
-    ensureMeta("keywords", `${brand.company}, 보험포털, 보험사전산, 상품공시실, 고객센터, GA영업포탈`);
-    ensureMeta("og:title", `${brand.company} 보험 포털`, "property");
-    ensureMeta("og:description", `${brand.company} 보험 포털. 보험사전산, 고객센터, 상품공시실 안내`, "property");
-    ensureMeta("og:type", "website", "property");
-
-    const ldId = "youreasset-jsonld";
-    const existing = document.getElementById(ldId);
-    if (existing) existing.remove();
-    const script = document.createElement("script");
-    script.id = ldId;
-    script.type = "application/ld+json";
-    script.text = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      name: brand.company,
-      description: brand.sub,
-      telephone: brand.phone,
-      url: window.location.href,
-    });
-    document.head.appendChild(script);
-
-    return () => {
-      const node = document.getElementById(ldId);
-      if (node) node.remove();
-    };
-  }, [brand]);
-}
-
-export default function YoureAssetInsurancePortal() {
-  const [activeTop, setActiveTop] = useState("system");
+export default function App() {
   const [brand, setBrand] = useState(defaultBrand);
   const [insurers, setInsurers] = useState(defaultInsurers);
+  const [activeTop, setActiveTop] = useState("system");
   const [adminOpen, setAdminOpen] = useState(false);
   const [user, setUser] = useState(null);
-  const [ready, setReady] = useState(false);
-
-  useSeo(brand);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    let unsubBrand = () => {};
-    let unsubInsurers = () => {};
-    let unsubAuth = () => {};
+    initializeSiteData(defaultBrand, defaultInsurers);
 
-    async function setup() {
-      unsubAuth = onAuthStateChanged(auth, (firebaseUser) => {
-        setUser(firebaseUser);
-      });
+    const unsubBrand = subscribeBrand((value) => {
+      if (value) setBrand(value);
+    });
 
-      try {
-        await initializeSiteData(defaultBrand, defaultInsurers);
-      } catch (error) {
-        console.warn("초기 데이터 자동 생성은 건너뜁니다.", error);
-      }
+    const unsubInsurers = subscribeInsurers((value) => {
+      if (Array.isArray(value) && value.length > 0) setInsurers(value);
+    });
 
-      try {
-        unsubBrand = subscribeBrand((data) => {
-          if (data) setBrand(data);
-        });
-      } catch (error) {
-        console.warn("브랜드 데이터 구독 중 오류가 발생했습니다.", error);
-      }
-
-      try {
-        unsubInsurers = subscribeInsurers((items) => {
-          if (Array.isArray(items) && items.length > 0) {
-            setInsurers(items);
-          }
-        });
-      } catch (error) {
-        console.warn("보험사 데이터 구독 중 오류가 발생했습니다.", error);
-      }
-
-      setReady(true);
-    }
-
-    setup();
+    const unsubAuth = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser || null);
+    });
 
     return () => {
-      unsubBrand();
-      unsubInsurers();
-      unsubAuth();
+      unsubBrand?.();
+      unsubInsurers?.();
+      unsubAuth?.();
     };
   }, []);
 
   const handleSave = async () => {
     try {
-      await saveBrand(brand);
-      await saveInsurers(insurers);
-      alert("Firebase에 저장되었습니다. 사이트에 바로 반영됩니다.");
+      setSaving(true);
+      await Promise.all([saveBrand(brand), saveInsurers(insurers)]);
+      alert("저장 완료: 사이트에 반영되었습니다.");
     } catch (error) {
-      console.error(error);
-      alert("저장 중 오류가 발생했습니다.");
+      console.error("save error:", error);
+      alert(`저장 실패: ${error.message}`);
+    } finally {
+      setSaving(false);
     }
   };
 
-  if (!ready) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-white text-slate-900">
-        <div className="text-center">
-          <p className="text-lg font-bold">불러오는 중...</p>
-          <p className="mt-2 text-sm text-slate-500">Firebase 데이터를 연결하고 있습니다.</p>
-        </div>
-      </main>
-    );
-  }
-
   return (
-    <main className="min-h-screen bg-white text-slate-900">
-      <Header activeTop={activeTop} setActiveTop={setActiveTop} brand={brand} onOpenAdmin={() => setAdminOpen(true)} isAdmin={!!user} />
+    <div
+      className="min-h-screen bg-[var(--bg)] text-[var(--text)]"
+      style={{
+        fontFamily: 'Pretendard, "Noto Sans KR", system-ui, sans-serif',
+        ["--bg"]: "#f6f7f9",
+        ["--card"]: "rgba(255,255,255,0.9)",
+        ["--soft"]: "#f4f1ea",
+        ["--border"]: "#e7e3db",
+        ["--text"]: "#16212f",
+        ["--muted"]: "#6a7280",
+        ["--brand"]: "#19324a",
+        ["--brand-deep"]: "#0f2236",
+        ["--gold"]: "#b9925a",
+        ["--gold-soft"]: "#d8bc8c",
+      }}
+    >
+      <Header
+        activeTop={activeTop}
+        setActiveTop={setActiveTop}
+        brand={brand}
+        onOpenAdmin={() => setAdminOpen(true)}
+        isAdmin={!!user}
+      />
       <Hero brand={brand} />
-      <About />
+      <About brand={brand} />
       <Features />
       <Directory activeTop={activeTop} setActiveTop={setActiveTop} insurers={insurers} />
-      <Footer brand={brand} />
-      <div className="mx-auto max-w-7xl px-4 pb-10 text-xs leading-6 text-slate-400 lg:px-8">
-        검색 노출을 위해서는 실제 배포 후 도메인 연결, 사이트맵 제출, 색인 요청이 추가로 필요합니다. 현재 코드는 Firebase 실시간 저장 구조까지 반영되어 있습니다.
-      </div>
+
+      <footer className="border-t border-[var(--border)] bg-white/80 py-8 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 text-sm text-[var(--muted)] lg:px-8 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="font-semibold text-[var(--text)]">{brand.company}</p>
+            <p>{brand.accent}</p>
+          </div>
+          <div className="text-left md:text-right">
+            <p>대표번호 {brand.phone}</p>
+            <p>보험사전산 · 보험사 고객센터 · 상품공시실</p>
+          </div>
+        </div>
+      </footer>
+
       <AdminModal
         open={adminOpen}
         onClose={() => setAdminOpen(false)}
@@ -978,6 +966,12 @@ export default function YoureAssetInsurancePortal() {
         setInsurers={setInsurers}
         onSave={handleSave}
       />
-    </main>
+
+      {saving && (
+        <div className="fixed bottom-5 right-5 rounded-full bg-[var(--brand)] px-4 py-2 text-sm font-semibold text-white shadow-lg">
+          저장 중...
+        </div>
+      )}
+    </div>
   );
 }
